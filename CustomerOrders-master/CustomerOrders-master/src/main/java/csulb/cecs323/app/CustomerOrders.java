@@ -72,11 +72,12 @@ public class CustomerOrders {
 
    /**
     * Main method creates instances of customerOrders then it begins a transaction. Inside the transaction
-    * is where the logic of the program is implemented. A list of products and customers is created with values
-    * for each.
-    *
+    * a list of products and customers is created where we add values for each. Next we persist products and
+    * customers to the database. Next is where the logic of the program is implemented. A customer object and
+    * list is created to store the orders and orderlines the customer will place. Inside a loop the method
+    * prompts the user to answer questions regarding the order being placed. The program runs until the user
+    * chooses to finish order.
     * @param args
-    * @return int input
     */
 
    public static void main(String[] args) {
@@ -132,8 +133,8 @@ public class CustomerOrders {
          //answer = false;
 
       //} else {
-         System.out.println("Please select the customer that is placing the order: ");
-         c = customerMenu(customers);
+      System.out.println("Please select the customer that is placing the order: ");
+      c = customerMenu(customers);
          //answer = true;
      // }
       List<Orders> orders = new ArrayList<>();
@@ -156,6 +157,14 @@ public class CustomerOrders {
          if (i > p.getUnits_in_stock()) {
             System.out.println("There is only " + p.getUnits_in_stock() + "left. This is as all we can add to your order.");
             i = p.getUnits_in_stock();
+         }
+         if(p.getUnits_in_stock() == 0){
+            while(p.getUnits_in_stock() == 0){
+               System.out.println(p.getProd_name() + " product is unavailable please select another product from list: ");
+               products.remove(p);
+               p = productMenu(products);
+               i = p.getUnits_in_stock();
+            }
          }
          int temp = p.getUnits_in_stock() - i;
          p.setUnits_in_stock(temp);
@@ -198,7 +207,7 @@ public class CustomerOrders {
    }
       // End of the main method
    /**
-     * Method uses scanner ta take in user input, stores the line
+     * Method utilizes scanner to take in user input, stores the line
      * Then returns a String when method is called
      * @return String input
     */
@@ -270,13 +279,27 @@ public class CustomerOrders {
             return products.get(0);
          }
       }// End of the getStyle method
-
+   /**
+    * This method passes in the products list and displays them and prompts the user to select a product by
+    * entering the product number. It returns the chosen product object.
+    * @param <> p array list of Products
+    * @return Product object
+    */
       public static Products productMenu (List <Products> p) {
-         System.out.println("Please select a product by enter the product's number on the menu: \n1) " + p.get(0).getProd_name() + "\n2) " + p.get(1).getProd_name() + "\n3) " + p.get(2).getProd_name() + "\n4) " + p.get(3).getProd_name() + "\n5) " + p.get(4).getProd_name());
+//         System.out.println("Please select a product by enter the product's number on the menu: \n1) " + p.get(0).getProd_name() + "\n2) " + p.get(1).getProd_name() + "\n3) " + p.get(2).getProd_name() + "\n4) " + p.get(3).getProd_name() + "\n5) " + p.get(4).getProd_name());
+         System.out.println("Please select a product by entering the product's number on the menu: ");
+         for(int i = 0; i < p.size(); i++){
+            System.out.println(i+1 + ") " + p.get(i).getProd_name() + "\n");
+         }
          int prod = getInt() - 1;
          return p.get(prod);
       }
-
+    /**
+    * This method passes in the Customers list. It displays the list and prompts the user to select a Customers by
+    * entering the Customer ID number. It returns the chosen Customer object.
+    * @param <> p array list of Customers
+    * @return Product object
+    */
       public static Customers customerMenu (List <Customers> c) {
          System.out.println("Please select a customer by entering the Customer ID Number:\n" + c.get(0) +
                  "\n " + c.get(1) + "\n " + c.get(2) + "\n " + c.get(3));
